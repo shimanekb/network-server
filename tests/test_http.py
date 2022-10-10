@@ -8,7 +8,7 @@ import server.http as http
 def test_http_request_parse_url_from_valid_request():
     # Given
     raw_request = """\
-                  GET /foo/stuff.html\r
+                  GET /foo/stuff.html HTTP/1.0\r
                   Host: www.localhost:9090\r
                   Connection: close\r
                   User-agent: Chrome\r
