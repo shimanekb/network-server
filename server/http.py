@@ -34,13 +34,14 @@ class HttpStatus(Enum):
 
 
 class HttpResponse:
-    def __init__(self, object: object.Object = None, version: str = 'HTTP/1.0'):
+    def __init__(self, object: object.Object = None,
+                 version: str = 'HTTP/1.0'):
         self.version = version
         self.status = HttpStatus.NOT_FOUND.value
         self.object = object
-        if self.object != None:
+        if self.object is not None:
             self.status = HttpStatus.OK.value
-        
+
     def __str__(self):
         content_length_line = ''
         content_type_line = ''
@@ -52,9 +53,9 @@ class HttpResponse:
             content_length_line = "Content-Length: %d" % c_len
             content_type_line = "Content-Type: %s" % self.object.type.value
             content = self.object.content
-        
-        status_line = '%s %d %s' % (self.version, 
-                                    self.status.code, 
+
+        status_line = '%s %d %s' % (self.version,
+                                    self.status.code,
                                     self.status.phrase)
 
         response = "%s\r%s\r%s\r%s\r\r%s" % (status_line,
@@ -62,5 +63,5 @@ class HttpResponse:
                                              content_length_line,
                                              content_type_line,
                                              content)
-        
+
         return response
