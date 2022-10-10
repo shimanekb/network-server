@@ -50,7 +50,7 @@ class HttpResponse:
         if self.status.code == 200:
             c_len = len(self.object.content)
             content_length_line = "Content-Length: %d" % c_len
-            content_type_line = "Content-Type: %s" % self.object.type
+            content_type_line = "Content-Type: %s" % self.object.type.value
             content = self.object.content
         
         status_line = '%s %d %s' % (self.version, 
@@ -59,8 +59,8 @@ class HttpResponse:
 
         response = "%s\r%s\r%s\r%s\r\r%s" % (status_line,
                                              connection,
-                                            content_length_line,
-                                            content_type_line,
-                                            content)
+                                             content_length_line,
+                                             content_type_line,
+                                             content)
         
         return response
