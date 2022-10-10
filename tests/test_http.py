@@ -44,3 +44,20 @@ def test_http_request_invalid_request_line():
 
         # When
         http.HttpRequest(raw_request)
+
+
+def test_http_response_str_not_found():
+    # Given
+    raw_resp = """\
+        HTTP/1.0 404 Not Found\r
+        Connection: close\r\r\r\r
+        """
+    raw_resp = dedent(raw_resp).replace('\n', '')
+
+    response = http.HttpResponse()
+
+    # When
+    result = str(response)
+
+    # Then
+    assert result == raw_resp
