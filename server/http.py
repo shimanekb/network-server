@@ -1,5 +1,27 @@
 from enum import Enum
+import socket
+
 import server.object as object
+
+
+class HttpController:
+    def __init__(self, object_repo: object.ObjectRepo):
+        self._object_repo = object_repo
+
+    def process_request(self, connection: socket.SocketType):
+        resp = HttpResponse()
+        try:
+            raw_req = connection.recv(1024).decode('utf-8')
+            req = HttpRequest(raw_req)
+            object = self._object_repo.find_by_name(req.url[1:])
+            resp = HttpResponse(object)
+        except ValueError:
+            resp.status = HttpStatus.BAD_REQUEST.value
+        except Exception:
+            resp.status = HttpStatus.INTERNAL_SERVER_ERROR.value
+        finally:
+            connection.send(str(resp).encode())
+            connection.close()
 
 
 class HttpRequest:
@@ -58,10 +80,10 @@ class HttpResponse:
                                     self.status.code,
                                     self.status.phrase)
 
-        response = "%s\r%s\r%s\r%s\r\r%s" % (status_line,
-                                             connection,
-                                             content_length_line,
-                                             content_type_line,
-                                             content)
+        response = "%s\r\n%s\r\n%s\r\n%s\r\n\r\n%s" % (status_line,
+                                                       connection,
+                                                       content_length_line,
+                                                       content_type_line,
+                                                       content)
 
         return response

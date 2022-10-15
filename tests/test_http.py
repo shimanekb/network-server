@@ -36,11 +36,11 @@ def test_http_request_invalid_request_line():
     with pytest.raises(ValueError):
         # Given
         raw_request = """\
-                      GET /foo/stuff.html\r
-                      Host: www.localhost:9090\r
-                      Connection: close\r
-                      User-agent: Chrome\r
-                      Accept-language: en\r"""
+                      GET /foo/stuff.html\r\n
+                      Host: www.localhost:9090\r\n
+                      Connection: close\r\n
+                      User-agent: Chrome\r\n
+                      Accept-language: en\r\n"""
         raw_request = dedent(raw_request)
 
         # When
@@ -73,7 +73,7 @@ def test_http_response_str_200():
         </body>
         </html>
         """
-    raw_resp = dedent(raw_resp).replace('\n', '')
+    raw_resp = dedent(raw_resp).replace('\n', '').replace('\r', '\r\n')
     ob = obj.Object(obj.ContentType.TEXT_HTML, content)
 
     response = http.HttpResponse(ob)
@@ -91,7 +91,7 @@ def test_http_response_str_server_error():
         HTTP/1.0 500 Internal Server Error\r
         Connection: close\r\r\r\r
         """
-    raw_resp = dedent(raw_resp).replace('\n', '')
+    raw_resp = dedent(raw_resp).replace('\n', '').replace('\r', '\r\n')
 
     response = http.HttpResponse()
     response.status = http.HttpStatus.INTERNAL_SERVER_ERROR.value
@@ -109,7 +109,7 @@ def test_http_response_str_not_found():
         HTTP/1.0 404 Not Found\r
         Connection: close\r\r\r\r
         """
-    raw_resp = dedent(raw_resp).replace('\n', '')
+    raw_resp = dedent(raw_resp).replace('\n', '').replace('\r', '\r\n')
 
     response = http.HttpResponse()
 

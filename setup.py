@@ -14,6 +14,9 @@ setup(name='server',
       },
       include_package_data=True,
       package_data={
-          '': ['*.ini']
+          '': ['*.ini',
+               'resources/*.html',
+               'resources/*.css',
+               'resources/*.js']
       }
       )
