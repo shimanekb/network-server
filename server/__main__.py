@@ -45,6 +45,7 @@ def run_server(port: int, processes: typing.List[Process]):
             except TimeoutError:
                 dead_processes = [p for p in processes if not p.is_alive()]
                 for p in dead_processes:
+                    p.close()
                     processes.remove(p)
                 pass
 
