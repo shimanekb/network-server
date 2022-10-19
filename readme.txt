@@ -1,8 +1,8 @@
 # CSE Network Server
 
 ## Build
-You need python 3.10 or higher installed, and a 
-bash terminal. If on Windows use Git Bash.
+You need python 3.10 or higher installed, a 
+bash terminal installed, and access to the web. If on Windows use Git Bash.
 
 1. Navigate to the root folder (network-server), using bash. 
 2. Run the bash script install.sh

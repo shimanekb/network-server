@@ -6,6 +6,7 @@ if [ ! -d "env" ]; then
 fi
 
 source ./env/Scripts/activate
+pip install tox
 tox
 pip install ./.tox/dist/server*.zip
 echo "Program net-server built and local installed."
