@@ -10,6 +10,9 @@ import server.http as csehttp
 
 
 def main():
+    """Main function for running the whole program, reads the port
+       commandline argument, then runs the server until given Ctrl + c"""
+
     config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                'config.ini')
     config = configparser.ConfigParser()
@@ -32,6 +35,9 @@ def main():
 
 
 def run_server(port: int, processes: typing.List[Process]):
+    """Create the listening socket, and passes any requests to an
+       independent process to handle it, allowing requests to be
+       quickly handled and concurrently processed."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('', port))
         s.listen()
@@ -43,14 +49,17 @@ def run_server(port: int, processes: typing.List[Process]):
                 proc.start()
                 processes.append(proc)
             except TimeoutError:
+                # Periodically during timeouts, no request made yet, clean out
+                # dead processes.
                 dead_processes = [p for p in processes if not p.is_alive()]
                 for p in dead_processes:
-                    p.close()
+                    p.kill()
                     processes.remove(p)
                 pass
 
 
 def request_handler(conn):
+    """Target function used for creating process to handle request."""
     csehttp.HttpController(obj.ObjectRepo()).process_request(conn)
 
 

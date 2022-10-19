@@ -5,10 +5,12 @@ import server.object as object
 
 
 class HttpController:
+    """Controler that coordinates request processing."""
     def __init__(self, object_repo: object.ObjectRepo):
         self._object_repo = object_repo
 
     def process_request(self, connection: socket.SocketType):
+        """Processes a request to a connection back to client."""
         resp = HttpResponse()
         try:
             raw_req = connection.recv(1024).decode('utf-8')
@@ -25,6 +27,8 @@ class HttpController:
 
 
 class HttpRequest:
+    """Represents incoming request, constructor parses raw
+       html request into this object."""
     def __init__(self, request: str):
         self._parse(request)
         self.request = request
@@ -43,12 +47,14 @@ class HttpRequest:
 
 
 class Status:
+    """Represents web status's used in Http Response"""
     def __init__(self, code: int, phrase: str):
         self.code = code
         self.phrase = phrase
 
 
 class HttpStatus(Enum):
+    """Enum of possible web status codes and phrases."""
     OK = Status(200, 'OK')
     NOT_FOUND = Status(404, 'Not Found')
     BAD_REQUEST = Status(400, 'Bad Request')
@@ -56,6 +62,7 @@ class HttpStatus(Enum):
 
 
 class HttpResponse:
+    """Represents Html response, with requested object."""
     def __init__(self, object: object.Object = None,
                  version: str = 'HTTP/1.0'):
         self.version = version
@@ -65,6 +72,7 @@ class HttpResponse:
             self.status = HttpStatus.OK.value
 
     def __str__(self):
+        """Translates response into raw text html to be sent."""
         content_length_line = ''
         content_type_line = ''
         content = ''
